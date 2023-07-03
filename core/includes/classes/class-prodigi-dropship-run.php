@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Prodigi_Dropship_Run{
 
+	
 	/**
 	 * Our Prodigi_Dropship_Run constructor 
 	 * to run the plugin logic.
@@ -46,6 +47,8 @@ class Prodigi_Dropship_Run{
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_backend_scripts_and_styles' ), 20 );
 		add_action( 'admin_bar_menu', array( $this, 'add_admin_bar_menu_items' ), 100, 1 );
 		add_action( 'plugins_loaded', array( $this, 'add_wp_webhooks_integrations' ), 9 );
+		add_action( 'plugins_loaded', array( $this, 'include_files' ), 10 );
+
 	
 	}
 
@@ -84,8 +87,10 @@ class Prodigi_Dropship_Run{
 	 * @return	void
 	 */
 	public function enqueue_backend_scripts_and_styles() {
+		
 		wp_enqueue_style( 'prodigidro-backend-styles', PRODIGIDRO_PLUGIN_URL . 'core/includes/assets/css/backend-styles.css', array(), PRODIGIDRO_VERSION, 'all' );
 		wp_enqueue_script( 'prodigidro-backend-scripts', PRODIGIDRO_PLUGIN_URL . 'core/includes/assets/js/backend-scripts.js', array(), PRODIGIDRO_VERSION, false );
+		wp_enqueue_script( 'prodigidro-tailwind-scripts', 'https://cdn.tailwindcss.com', array(), PRODIGIDRO_VERSION, false );
 		wp_localize_script( 'prodigidro-backend-scripts', 'prodigidro', array(
 			'plugin_name'   	=> __( PRODIGIDRO_NAME, 'prodigi-dropship' ),
 		));
@@ -136,6 +141,12 @@ class Prodigi_Dropship_Run{
 				'tabindex'	=> false,
 			),
 		));
+
+	}
+
+	public function include_files(){
+		$folder = plugin_dir_path( __FILE__ ) ;
+		include( $folder. '/class-prodigi-shipping-settings-page.php');
 
 	}
 
